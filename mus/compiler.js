@@ -1,9 +1,22 @@
+PITCH = {a: 9,
+         b: 11,
+         c: 0,
+         d: 2,
+         e: 4,
+         f: 5,
+         g: 7
+        }
+
 function Note(start, mus){
     this.start = start;
     this.duration = 0;
     this.notes = [];
     this._compile(mus);
 }
+
+Note.prototype.pitch2midi = function(pitch){
+    return 12 + PITCH[pitch[0]] + 12 * pitch[1];
+};
 
 Note.prototype._add_notes = function(mus_list){
     var max_duration = 0;
@@ -27,8 +40,10 @@ Note.prototype._compile = function(item){
     }
     else if(item.tag == 'note') {
         this.notes.push({
-            tag: 'note', pitch: item.pitch,
-            start: this.start, dur: item.dur
+            tag: 'note',
+            pitch: this.pitch2midi(item.pitch),
+            start: this.start,
+            dur: item.dur
         });
         this.duration += item.dur;
     }
@@ -56,11 +71,11 @@ var melody_mus =
       left:
        { tag: 'seq',
          left: { tag: 'rest', duration: 30 },
-         right: { tag: 'note', pitch: 'b4', dur: 250 } },
+         right: { tag: 'note', pitch: 'c4', dur: 250 } },
       right:
        { tag: 'seq',
-         left: { tag: 'note', pitch: 'c4', dur: 500 },
-         right: { tag: 'note', pitch: 'd4', dur: 500 } } };
+         left: { tag: 'note', pitch: 'e4', dur: 500 },
+         right: { tag: 'note', pitch: 'g4', dur: 500 } } };
 
 console.log(melody_mus);
 console.log(compile(melody_mus));
