@@ -50,6 +50,11 @@ Note.prototype._compile = function(item){
     else if(item.tag == 'rest') {
         this.duration += item.duration;
     }
+    else if(item.tag == 'repeat'){
+        for (var i=0; i<item.count; i++){
+            this._add_notes([item.section]);
+        }
+    }
 };
 
 function compile(musexpr){
@@ -66,16 +71,23 @@ function compile(musexpr){
 
 /////////////////////////////////////////////
 
-var melody_mus =
-    { tag: 'par',
-      left:
-       { tag: 'seq',
-         left: { tag: 'rest', duration: 30 },
-         right: { tag: 'note', pitch: 'c4', dur: 250 } },
-      right:
-       { tag: 'seq',
-         left: { tag: 'note', pitch: 'e4', dur: 500 },
-         right: { tag: 'note', pitch: 'g4', dur: 500 } } };
+var melody_mus = {
+    tag: 'par',
+    left: {
+        tag: 'seq',
+        left: { tag: 'rest', duration: 30 },
+        right: { tag: 'note', pitch: 'c4', dur: 250 }
+    },
+    right: {
+        tag: 'repeat',
+        count: 3,
+        section: {
+            tag: 'seq',
+            left: { tag: 'note', pitch: 'e4', dur: 500 },
+            right: { tag: 'note', pitch: 'g4', dur: 500 }
+        }
+    }
+};
 
 console.log(melody_mus);
 console.log(compile(melody_mus));
