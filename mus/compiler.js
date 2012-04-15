@@ -32,6 +32,9 @@ Note.prototype._compile = function(item){
         });
         this.duration += item.dur;
     }
+    else if(item.tag == 'rest') {
+        this.duration += item.duration;
+    }
 };
 
 function compile(musexpr){
@@ -49,10 +52,10 @@ function compile(musexpr){
 /////////////////////////////////////////////
 
 var melody_mus =
-    { tag: 'seq',
+    { tag: 'par',
       left:
        { tag: 'seq',
-         left: { tag: 'note', pitch: 'a4', dur: 250 },
+         left: { tag: 'rest', duration: 30 },
          right: { tag: 'note', pitch: 'b4', dur: 250 } },
       right:
        { tag: 'seq',
