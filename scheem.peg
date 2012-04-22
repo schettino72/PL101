@@ -1,0 +1,32 @@
+start =
+  ignore* exp:expression? ignore* {return exp;}
+
+
+ignore =
+    space
+  / comment
+
+space = [ \r\n\t]
+
+comment = ";;" [^\n]*
+
+
+
+expression =
+     atom
+  /  list
+  /  quote
+
+atom =
+     atom_char:[0-9a-zA-Z_?!+-=@#$%^&*/.]+
+       {return atom_char.join("")}
+
+list =
+    "(" ignore*  xx:(expression ignore*)* ")"
+        { return xx.map(function(data){return data[0]}); }
+
+quote =
+    quote:"'" exp:expression {return ['quote', exp];}
+
+
+
