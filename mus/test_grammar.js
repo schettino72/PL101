@@ -24,7 +24,7 @@ fs.readFile('mus/grammar.peg', 'ascii', function(err, grammar) {
     // samples
     var e4 = { tag: 'note', pitch: 'e4', dur: 50};
     var g6 = { tag: 'note', pitch: 'g6', dur: 100};
-    var rest = { tag: 'rest', dur: 100};
+    var rest = { tag: 'rest', duration: 100};
 
     // empty file -> root element is always a seqn
     assert.deepEqual("", parse(""));
