@@ -6,7 +6,7 @@ var fs = require('fs'); // for loading files
 
 fs.readFile('mus/grammar.peg', 'ascii', function(err, grammar) {
     // Show the PEG grammar file
-    console.log(grammar);
+    //console.log(grammar);
     var PARSER = PEG.buildParser(grammar);
 
     // Create my parser
@@ -15,7 +15,7 @@ fs.readFile('mus/grammar.peg', 'ascii', function(err, grammar) {
         return PARSER.parse(data);
     };
 
-    console.log("\n\n*******************");
+    console.log("\n*******************");
 
     // helpers
     function sn(v) { return {tag:'seqn', 'values': v}};
@@ -63,6 +63,22 @@ fs.readFile('mus/grammar.peg', 'ascii', function(err, grammar) {
 
     // repeat
     assert.deepEqual({tag: 'repeat', count:2, section: e4}, parse("2 * e4:50"));
+    assert.deepEqual({tag: 'repeat', count:100, section: e4},
+                     parse("100 * e4:50"));
+    assert.deepEqual(sn([{tag: 'repeat', count:2, section: e4}, g6]),
+                     parse("2 * e4:50 g6:100"));
     assert.deepEqual({tag: 'repeat', count:2, section: sn([rest, e4])},
                      parse("2 * (rest:100 e4:50)"));
+
+    // store
+    assert.deepEqual({tag: 'store', name: 'var', value: e4},
+                     parse("var = e4:50"));
+
+    // load
+    assert.deepEqual(sn([{tag: 'store', name: 'var', value: e4},
+                         g6,
+                         {tag: 'load', name: 'var'}
+                        ]),
+                     parse("var = e4:50 g6:100 var"));
+
 });

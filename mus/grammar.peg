@@ -1,5 +1,7 @@
 start =
-    ignore* s:seq? {return s}
+    __ s:seq? {return s}
+
+__ = ignore*
 
 ignore =
     space
@@ -11,7 +13,7 @@ comment = "#" [^\n]*
 
 
 seq =
-   s:(si:seqitem ignore* {return si})+
+   s:(e:exp __ {return e})+
     {
       // if sequence contains just one element, return the element not seqn
       if (s.length == 1)
@@ -21,11 +23,18 @@ seq =
     }
 
 
+exp =
+   seqitem
+ / store
+ / load
+
+
 seqitem =
     note
   / block
   / par
   / repeat
+
 
 note =
     p:pitch ":" d:duration {return {tag:'note', pitch: p, dur: d};}
@@ -40,11 +49,31 @@ duration =
 
 
 block =
-    "(" ignore* s:seq ")" {return s;}
+    "(" __ s:seq ")" {return s;}
 
+
+// par -> [seq1, seq2, seq3]
 par =
-    "[" ignore* p:(s:seq "," {return s;})* ignore* sf:seq? "]"
-    {p.push(sf); return {tag: 'parn', values: p};}
+    "[" __ p:(s:seq "," {return s;})* __ sf:seq? "]"
+      {p.push(sf); return {tag: 'parn', values: p};}
+
 
 repeat =
-    d:[1-9][0-9]* ignore* "*" ignore* s:seq {return {tag: 'repeat', count: d, section: s};}
+    c:integer __ "*" __ s:seqitem
+     {return {tag: 'repeat', count: c, section: s};}
+
+
+store =
+   n:varname __ "=" __ s:seqitem
+     {return {tag: 'store', name: n, value: s};}
+
+load =
+   n:varname {return {tag: 'load', name: n};}
+
+
+integer =
+   h:[1-9] t:[0-9]* {return h + t.join("");}
+
+varname =
+   h:[a-zA-Z_] t:[a-zA-Z_0-9]* {return h + t.join('');}
+
