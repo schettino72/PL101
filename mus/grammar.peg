@@ -1,0 +1,50 @@
+start =
+    ignore* s:seq? {return s}
+
+ignore =
+    space
+  / comment
+
+space = [ \r\n\t]
+
+comment = "#" [^\n]*
+
+
+seq =
+   s:(si:seqitem ignore* {return si})+
+    {
+      // if sequence contains just one element, return the element not seqn
+      if (s.length == 1)
+        return s[0];
+      else
+        return {tag: 'seqn', values: s};
+    }
+
+
+seqitem =
+    note
+  / block
+  / par
+  / repeat
+
+note =
+    p:pitch ":" d:duration {return {tag:'note', pitch: p, dur: d};}
+ /  "rest:" d:duration {return {tag:'rest', dur: d};}
+
+
+pitch =
+    p1:[a-h] p2:[0-9] {return p1+p2;}
+
+duration =
+    d:[0-9]+ {return d.join("");}
+
+
+block =
+    "(" ignore* s:seq ")" {return s;}
+
+par =
+    "[" ignore* p:(s:seq "," {return s;})* ignore* sf:seq? "]"
+    {p.push(sf); return {tag: 'parn', values: p};}
+
+repeat =
+    d:[1-9][0-9]* ignore* "*" ignore* s:seq {return {tag: 'repeat', count: d, section: s};}
