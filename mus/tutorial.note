@@ -1,0 +1,31 @@
+# comments can be added after "#" up to the end of line
+
+# a single note is represented by <pitch>:<duration(ms)>
+f2:100
+
+# a sequence of notes is separated by space (or newline)
+f2:50 f3:50
+
+# a rest can be created using the word "rest" in the place of a pitch
+f2:50 rest:20 f3:50
+
+# notes can be executed in parallel by comma separated list [<seq1>, <seq2>]
+f2:50 [f3:100, b4:50 b6:50]
+
+# a sequence can be group in block using "()"
+(f2:50 f3:50)
+
+# you can repeat a sequence by using <count> * <seq>
+# note you need a block to repeat more than one note
+2 * (f2:50 f3:50)
+
+# EXTRA
+# you can assing single notes or blocks to a variable <var name> = <seq>
+# than use it anywhere a note or sequence is expected
+track_1 = (f2:50 f3:50)
+f4:100 track_1
+
+# twinkle twinkle little star - based on @bogdan answer
+twinkle = (2*c1:100 2*g1:100 2*a2:100 g1:200
+           2*f1:100 2*e1:100 2*d1:100 c1:200)
+twinkle 2*(2*g1:100 2*f1:100 2*e1:100 d1:200) twinkle

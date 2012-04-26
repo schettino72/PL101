@@ -38,14 +38,14 @@ seqitem =
 
 note =
     p:pitch ":" d:duration {return {tag:'note', pitch: p, dur: d};}
- /  "rest:" d:duration {return {tag:'rest', dur: d};}
+ /  "rest:" d:duration {return {tag:'rest', duration: d};}
 
 
 pitch =
-    p1:[a-h] p2:[0-9] {return p1+p2;}
+    p1:[a-g] p2:[0-9] {return p1+p2;}
 
 duration =
-    d:[0-9]+ {return d.join("");}
+    d:[0-9]+ {return parseInt(d.join(""));}
 
 
 block =
@@ -72,7 +72,7 @@ load =
 
 
 integer =
-   h:[1-9] t:[0-9]* {return h + t.join("");}
+   h:[1-9] t:[0-9]* {return parseInt(h + t.join(""));}
 
 varname =
    h:[a-zA-Z_] t:[a-zA-Z_0-9]* {return h + t.join('');}
