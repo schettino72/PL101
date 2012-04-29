@@ -1,0 +1,32 @@
+start =
+  __* exp:expression? __* {return exp;}
+
+
+__ =
+    space
+  / comment
+
+space = [ \r\n\t]
+
+comment = ";;" [^\n]*
+
+
+
+expression =
+     atom
+  /  list
+  /  quote
+
+atom =
+     atom_char:[0-9a-zA-Z_?!+-=@#$%^&*/.]+
+       {return atom_char.join("")}
+
+list =
+    "(" __*  xx:(e:expression __* {return e})* ")"
+        { return xx; }
+
+quote =
+    quote:"'" exp:expression {return ['quote', exp];}
+
+
+
