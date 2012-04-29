@@ -4,7 +4,7 @@ var fs = require('fs'); // for loading files
 
 
 
-fs.readFile('scheem.peg', 'ascii', function(err, grammar) {
+fs.readFile('scheem/grammar.peg', 'ascii', function(err, grammar) {
     // Show the PEG grammar file
     console.log(grammar);
     var PARSER = PEG.buildParser(grammar);
